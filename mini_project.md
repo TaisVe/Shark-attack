@@ -1,19 +1,29 @@
 #Quest: Shark Attacts
-## **Business proposition
+
+## \*\*Business proposition
+
 Due to Florida's tourism, Governor Ronald Dion DeSantis has contacted Vaughn Analysts Inc. to analyze shark attacts around Florida.
-## **Data to be analyzed
+
+## \*\*Data to be analyzed
+
 As part of the data exploration, Vaughn Analysts Inc. found a Global Shark Attack File. (https://www.sharkattackfile.net/incidentlog.htm). The data for analysis was retreaved from this site, espefifically from this link: https://www.sharkattackfile.net/spreadsheets/GSAF5.xls
+
 ### Hypothesis
+
 #### Univariate analysis
+
 1. Shark attacts are more common among individuals swimming.
 2. Shark attacts are more common during the afternoon.
 3. Shark attacts are more common if the sharks are provoked.
 4. Shark attacts are more common to males.
 5. Shark attacts are more common during the summer months.
 6. Shark attacts are more common among people under 30 years old.
-## **Data cleaning
+
+## \*\*Data cleaning
+
 ### Downloading the file and additional libraries
-The first step into the data cleaning is to download the file into Python. In this case, a Jupyter Notebook is going to be used. 
+
+The first step into the data cleaning is to download the file into Python. In this case, a Jupyter Notebook is going to be used.
 Pandas library needs to be imported before creating the dataframe.
 '''python
 import numpy as np
@@ -21,7 +31,9 @@ import pandas as pd
 url = "https://www.sharkattackfile.net/spreadsheets/GSAF5.xls"
 shark_data = pd.read_excel(url)
 '''
+
 ### Taking a look at the data
+
 To identify were the data needs cleaning, the data must be looked at. With the following code one can see the columns and how the data is presented in the table.
 '''python
 shark_data.head(5)
@@ -36,7 +48,9 @@ Each column has a name. The name for the columns can be identified with:
 '''python
 shark_data.columns
 '''
+
 ### Cleaning the data per columns
+
 First, considering the Country column the ones that are not USA will be eliminated from the dataframe.
 To do that the following code will show if the USA is written in different ways.
 '''python
@@ -60,12 +74,14 @@ useful_columns = ['Date', 'Type', 'Activity', 'Sex', 'Age', 'Time', 'Species ']
 filtered_data = florida_data[useful_columns]
 filtered_data.columns
 '''
+
 ### Cleaning the data per rows
-First, the data es check  for duplicates.
+
+First, the data es check for duplicates.
 '''python
 filtered_data.duplicated().sum()
 '''
-Now the Type colummn's names are verified. 
+Now the Type colummn's names are verified.
 '''python
 filtered_data['Type'].unique()
 '''
@@ -77,18 +93,20 @@ Fixing the misspell on Provoked.
 '''python
 filtered_data_cleaned['Type'] = filtered_data_cleaned['Type'].str.strip().replace(' Provoked', 'Provoked')
 '''
-Type can be transformed to 'Provoked', 'Unprovoked' and 'Questionable'. 
+Type can be transformed to 'Provoked', 'Unprovoked' and 'Questionable'.
 '''python
 filtered_data_cleaned['Type'] = filtered_data_cleaned['Type'].apply(lambda x: 'Questionable' if x not in ['Provoked', 'Unprovoked'] else x)
 '''
 To count the amount of incidents per Type of incident.
 '''python
-filtered_data_cleaned['Type'].value_counts() 
+filtered_data_cleaned['Type'].value_counts()
 '''
+
 #### Hypothesis #3
+
 With his information, the hypothesis #3 gets rejected. Shark attacts are not more common if the sharks are provoked.
 
-Now the Activity colummn's names are verified. 
+Now the Activity colummn's names are verified.
 '''python
 filtered_data_cleaned['Activity'].unique()
 '''
@@ -98,15 +116,15 @@ import re
 '''
 Then the following code will be used to identify code word on the string.
 '''python
-pattern_1 = re.compile(r'.*fishing.*', flags=re.IGNORECASE)
-pattern_2 = re.compile(r'.*swimming.*', flags=re.IGNORECASE)
-pattern_3 = re.compile(r'.*surfing.*', flags=re.IGNORECASE)
-pattern_4 = re.compile(r'.*wading.*', flags=re.IGNORECASE)
+pattern_1 = re.compile(r'._fishing._', flags=re.IGNORECASE)
+pattern_2 = re.compile(r'._swimming._', flags=re.IGNORECASE)
+pattern_3 = re.compile(r'._surfing._', flags=re.IGNORECASE)
+pattern_4 = re.compile(r'._wading._', flags=re.IGNORECASE)
 '''
 After the patter of recognition has been created, the data will be changed to match that pattern.
 '''python
 def activity_def(df,activity,pattern, action ):
-  return df.loc[df[activity].str.contains(pattern, na=False), activity] == action
+return df.loc[df[activity].str.contains(pattern, na=False), activity] == action
 activity_def(filtered_data_cleaned,'Activity',pattern_1,'Fishing')
 activity_def(filtered_data_cleaned,'Activity',pattern_2,'Swimming')
 activity_def(filtered_data_cleaned,'Activity',pattern_3,'Surfing')
@@ -120,7 +138,9 @@ With the funtion .value_counts, the types of activities can be counted.
 '''python
 filtered_data_cleaned['Activity'].value_counts().head(3)
 '''
+
 #### Hypothesis #1
+
 With that last code, the hypothesis gets rejected. Shark attacts are not more common among individuals swimming.
 
 The Sex column's information gets looked at to verify for differences in inputs.
@@ -137,16 +157,18 @@ filtered_data_cleaned['Sex'] = filtered_data_cleaned['Sex'].str.strip()
 '''
 The value counts can be used to prove the hypothesis #5.
 '''pyhon
-filtered_data_cleaned['Sex'].value_counts() 
+filtered_data_cleaned['Sex'].value_counts()
 '''
+
 #### Hypothesis #4
+
 The hypotheis shark attacts are more common in males, gets accepted.
 
 When looking at the Date column:
 '''python
 filtered_data_cleaned['Date'].unique()
 '''
-The date column gives too much information not needed in the analysis. Only the month is going to be used for  the analysis. 
+The date column gives too much information not needed in the analysis. Only the month is going to be used for the analysis.
 For that the column's null values with Unknown.
 '''python
 filtered_data_cleaned['Date'].fillna('Unknown', inplace=True)
@@ -164,7 +186,9 @@ The shark attacts per month can be seen in this code:
 month_counts = filtered_data_cleaned['Month'].value_counts()
 month_counts
 '''
+
 #### Hypothesis #5
+
 The hypotheis: shark attacts are more common during the summer months; is rejected. September was the month with more chark attacts.
 
 Since, a new column for month was created, the column for Date can be eliminated.
@@ -198,9 +222,11 @@ filtered_data_cleaned['Age'] = filtered_data_cleaned['Age'].astype(float).astype
 '''
 the count of the total shark attacts per sex can be found with:
 '''python
-filtered_data_cleaned['Age'].value_counts() 
+filtered_data_cleaned['Age'].value_counts()
 '''
+
 #### Hypothesis #6
+
 The hypothesis is acepted. Shark attacts are more common among people under 30 years old.
 This grapth includes a more visual way of displaying the data.
 '''python
@@ -218,8 +244,8 @@ filtered_data_cleaned['Time'].dtype
 Then this function is created to categorize the time:
 '''python
 def categorize_time(time):
-    if pd.isna(time):  # Check if the value is NaN
-        return np.nan
+if pd.isna(time): # Check if the value is NaN
+return np.nan
 
     # Convert to string
     time_str = str(time)
@@ -247,6 +273,7 @@ def categorize_time(time):
         return 'AFTERNOON'
     else:
         return 'EVENING'
+
 '''
 That function is applied to clean the column Time with this code:
 '''python
@@ -256,11 +283,11 @@ Then the total null values in Time is calculated.
 '''python
 total_nulls = filtered_data_cleaned['Time'].isnull().sum()
 '''
-Then a ratio tu fill the null values is created based on 
+Then a ratio tu fill the null values is created based on
 '''python
-afternoon_nulls = round((53/99) * total_nulls)
-morning_nulls = round((32/99) * total_nulls)
-evening_nulls = round((10/99) * total_nulls)
+afternoon_nulls = round((53/99) _ total_nulls)
+morning_nulls = round((32/99) _ total_nulls)
+evening_nulls = round((10/99) \* total_nulls)
 '''
 Then those ratios are used to fill in the nulls with the 3 possible inputs afternoon, morning and evening.
 '''python
@@ -270,14 +297,13 @@ filtered_data_cleaned['Time'].fillna('EVENING', limit=evening_nulls, inplace=Tru
 '''
 To verify the input with highest frecuency in the Time category, the next code was used:
 '''python
-filtered_data_cleaned['Time'].value_counts() 
+filtered_data_cleaned['Time'].value_counts()
 '''
 This code helps visualize the category Time.
 '''python
 sns.histplot(filtered_data_cleaned['Time'], bins=100)
 '''
+
 #### Hypothesis #2
+
 The time of day with most shark attacts is the afternoon. The hypothesis gets accepted.
-
-
-
