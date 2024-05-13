@@ -108,7 +108,7 @@ With his information, the hypothesis #3 gets rejected. Shark attacts are not mor
 
 Now the Activity colummn's names are verified.
 '''python
-filtered_data_cleaned['Activity'].unique()
+filtered*data_cleaned['Activity'].unique()
 '''
 To clean the Activity column a library must be downloaded.
 '''python
@@ -116,10 +116,10 @@ import re
 '''
 Then the following code will be used to identify code word on the string.
 '''python
-pattern_1 = re.compile(r'._fishing._', flags=re.IGNORECASE)
-pattern_2 = re.compile(r'._swimming._', flags=re.IGNORECASE)
-pattern_3 = re.compile(r'._surfing._', flags=re.IGNORECASE)
-pattern_4 = re.compile(r'._wading._', flags=re.IGNORECASE)
+pattern_1 = re.compile(r'.\_fishing.*', flags=re.IGNORECASE)
+pattern*2 = re.compile(r'.\_swimming.*', flags=re.IGNORECASE)
+pattern*3 = re.compile(r'.\_surfing.*', flags=re.IGNORECASE)
+pattern*4 = re.compile(r'.\_wading.*', flags=re.IGNORECASE)
 '''
 After the patter of recognition has been created, the data will be changed to match that pattern.
 '''python
@@ -277,7 +277,7 @@ return np.nan
 '''
 That function is applied to clean the column Time with this code:
 '''python
-filtered_data_cleaned['Time'] = filtered_data_cleaned['Time'].apply(categorize_time)
+filtered*data_cleaned['Time'] = filtered_data_cleaned['Time'].apply(categorize_time)
 '''
 Then the total null values in Time is calculated.
 '''python
@@ -285,8 +285,8 @@ total_nulls = filtered_data_cleaned['Time'].isnull().sum()
 '''
 Then a ratio tu fill the null values is created based on
 '''python
-afternoon_nulls = round((53/99) _ total_nulls)
-morning_nulls = round((32/99) _ total_nulls)
+afternoon_nulls = round((53/99) * total*nulls)
+morning_nulls = round((32/99) * total_nulls)
 evening_nulls = round((10/99) \* total_nulls)
 '''
 Then those ratios are used to fill in the nulls with the 3 possible inputs afternoon, morning and evening.

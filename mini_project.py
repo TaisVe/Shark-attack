@@ -2,7 +2,7 @@
 
 def activity_def(df,activity,pattern, action ):
   return df.loc[df[activity].str.contains(pattern, na=False), activity] == action
-
+ 
 
 def categorize_time(time):
     if pd.isna(time):  # Check if the value is NaN
